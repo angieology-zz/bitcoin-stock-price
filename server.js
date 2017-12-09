@@ -16,7 +16,7 @@ var router = express.Router();
 var port = process.env.API_PORT || 3001;
 
 //db config -- REPLACE USERNAME/PASSWORD/DATABASE WITH YOUR OWN FROM MLAB!
-var mongoDB = 'mongodb://angieology:bitcoin@ds129166.mlab.com:29166/bitcoin';
+var mongoDB = process.env.MONGODB_URI;
 mongoose.connect(mongoDB, { useMongoClient: true })
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
