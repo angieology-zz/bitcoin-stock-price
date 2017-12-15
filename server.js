@@ -42,19 +42,19 @@ router.get('/', function(req, res) {
   res.json({ message: 'API Initialized!'});
 });
 
-//adding the /comments route to our /api router
+//adding the /ticker route to our /api router
 router.route('/ticker')
-  //retrieve all comments from the database
+  //retrieve all ticker from the database
   .get(function(req, res) {
-    //looks at our Comment Schema
+    //looks at our Ticker Schema
     TickerPrices.find(function(err, tickerPrices) {
       if (err)
         res.send(err);
-      //responds with a json object of our database comments.
+      //responds with a json object of our database ticker.
       res.json(tickerPrices)
     });
   })
-  //post new comment to the database
+  //post new ticker to the database
   .post(function(req, res) {
     var ticker = new ticker();
     (req.body.price) ? ticker.price = req.body.price : null;
