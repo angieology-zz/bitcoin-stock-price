@@ -7,8 +7,10 @@ var Schema = mongoose.Schema;
 //create new instance of the mongoose.schema. the schema takes an object that shows
 //the shape of your database entries.
 var TickerSchema = new Schema({
-  price: String,//try num type
-  time: String
+  time: String,
+  LTC: String,
+  ETH: String,
+  DASH: String
 });
 
 //export our module to use in server.js

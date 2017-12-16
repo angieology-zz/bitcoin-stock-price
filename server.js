@@ -16,7 +16,7 @@ var router = express.Router();
 var port = process.env.API_PORT || 3001;
 
 //db config -- REPLACE USERNAME/PASSWORD/DATABASE WITH YOUR OWN FROM MLAB!
-var mongoDB = process.env.MONGODB_URI;
+var mongoDB = 'mongodb://angieology:bitcoin@ds129166.mlab.com:29166/bitcoin';//process.env.MONGODB_URI;
 mongoose.connect(mongoDB, { useMongoClient: true })
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -42,30 +42,32 @@ router.get('/', function(req, res) {
   res.json({ message: 'API Initialized!'});
 });
 
-//adding the /comments route to our /api router
+//adding the /ticker route to our /api router
 router.route('/ticker')
-  //retrieve all comments from the database
+  //retrieve all ticker from the database
   .get(function(req, res) {
-    //looks at our Comment Schema
-    TickerPrices.find(function(err, tickerPrices) {
+    //looks at our Ticker Schema
+    Ticker.find(function(err, tickers) {
       if (err)
         res.send(err);
-      //responds with a json object of our database comments.
-      res.json(tickerPrices)
+      //responds with a json object of our database ticker.
+      res.json(tickers)
     });
   })
-  //post new comment to the database
+  //post new ticker to the database
   .post(function(req, res) {
-    var ticker = new ticker();
-    (req.body.price) ? ticker.price = req.body.price : null;
-    (req.body.time) ? ticker.time = req.body.time : null;
-
-    ticker.save(function(err) {
-      if (err)
-        res.send(err);
-      res.json({ message: 'ticker price successfully added!' });
-    });
+      var ticker = new Ticker();
+      (req.body.LTC) ? ticker.LTC = req.body.LTC : null;
+      (req.body.ETH) ? ticker.ETH = req.body.ETH : null;
+      (req.body.DASH) ? ticker.DASH = req.body.DASH : null;
+      (req.body.time) ? ticker.time = req.body.time : null;
+      ticker.save(function(err) {
+        if (err)
+          res.send(err);
+        res.json({ message: 'ticker row successfully added!' });
+      }); 
   });
+
 
 
 //Use our router configuration when we call /api

@@ -4,6 +4,7 @@ import BitcoinData from './BitcoinData';
 
 ReactDOM.render(
   <BitcoinData
+  url='http://localhost:3001/api/ticker'
     />,
   document.getElementById('root')
 );
