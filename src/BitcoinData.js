@@ -198,8 +198,7 @@ class BitcoinData extends Component {
      return cleanHistoryData;
   }
   formatTime(secs) {
-    console.log(secs)
-    var t = new Date(1970, 0, 1); // Epoch
+    var t = new Date(1970, 0, 1); // Epoch---todo fix
     t.setSeconds(secs);
     var datetext = t.toTimeString();
     return datetext.split(' ')[0];

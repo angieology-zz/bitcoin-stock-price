@@ -10,36 +10,6 @@ class HistoryChart extends Component {
       
     };
   }
-  // loadDataFromServer() {
-  //   axios.get(`${this.props.url}/${this.props.api}`)
-  //     .then(res=> {
-  //       let data = this.cleanData(res.data);
-  //       this.setState({ data: data });
-  //       console.log(this.state.data);
-  //     })
-  // }
-  
-  // cleanData(rawData) {
-  //   //clean for fields currency, price, time
-  //   //should probably limit scale
-  //   let cleanHistoryData = [];
-  //   rawData.forEach((tickerItem)=> {
-  //     if (tickerItem.LTC && tickerItem.ETH && tickerItem.DASH && tickerItem.time) {
-  //       var newCleanedTicker = {
-  //         LTC: parseFloat(tickerItem.LTC),
-  //         ETH: parseFloat(tickerItem.ETH),
-  //         DASH: parseFloat(tickerItem.DASH),
-  //         time: this.formatTime(parseInt(tickerItem.time))
-  //       }
-  //       cleanHistoryData.push(newCleanedTicker);
-  //     }
-  //   });
-  //    return cleanHistoryData;
-  // }
-  // componentDidMount() {
-  //   this.loadDataFromServer()
-  // };
-
 
   render() {
     if (!this.props.data) { return <div></div>}
