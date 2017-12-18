@@ -61,6 +61,7 @@ router.route('/ticker')
       (req.body.ETH) ? ticker.ETH = req.body.ETH : null;
       (req.body.DASH) ? ticker.DASH = req.body.DASH : null;
       (req.body.time) ? ticker.time = req.body.time : null;
+      (req.body.API) ? ticker.API = req.body.API : null;
       ticker.save(function(err) {
         if (err)
           res.send(err);

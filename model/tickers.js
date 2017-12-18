@@ -10,7 +10,8 @@ var TickerSchema = new Schema({
   time: String,
   LTC: String,
   ETH: String,
-  DASH: String
+  DASH: String,
+  API: String
 });
 
 //export our module to use in server.js
