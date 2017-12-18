@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import BitcoinData from './BitcoinData';
+import BitcoinApp from './BitcoinApp';
 
 ReactDOM.render(
-  <BitcoinData
+  <BitcoinApp
   url='http://localhost:3001/api/ticker'
     />,
   document.getElementById('root')

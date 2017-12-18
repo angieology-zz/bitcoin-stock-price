@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import { Table } from 'react-bootstrap';
 
 class RatesTable extends Component {
   constructor(props) {
@@ -27,7 +28,7 @@ class RatesTable extends Component {
 
   render() {
     return(
-        <table>
+        <Table striped bordered condensed hover>
           <tbody>
           <tr>
             <th>Currency</th>
@@ -50,7 +51,7 @@ class RatesTable extends Component {
             <td>{ this.props.bitcoinAmount? this.calculateTotalInBitcoin(this.props.dash)  : ''}</td>
           </tr>
           </tbody>
-      </table>
+      </Table>
     )
   }
 }

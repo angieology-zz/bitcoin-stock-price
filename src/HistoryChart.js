@@ -15,6 +15,8 @@ class HistoryChart extends Component {
     if (!this.props.data) { return <div></div>}
   
     return (
+      <div>
+        <h3>Historical Trend</h3>
       <LineChart width={600} height={300} data={this.props.data}
             margin={{top: 5, right: 30, left: 20, bottom: 5}}>
        <XAxis 
@@ -28,7 +30,7 @@ class HistoryChart extends Component {
        <Line type="monotone" dataKey="ETH" stroke="#82ca9d" />
        <Line type="monotone" dataKey="DASH" stroke="#83da0f" />
       </LineChart>
-     
+     </div>
     );
   }
 }
