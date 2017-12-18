@@ -8,41 +8,46 @@ class RatesTable extends Component {
       
     };
   }
-  calculateRates() {
-    this.props.getLatestRates();
-    this.setState({
-      LtcAmount: (1 / this.state.litecoin).toFixed(3),
-      EthAmount: (1 / this.state.ethereum).toFixed(3),
-      DashAmount: (1 / this.state.dash).toFixed(3)
-    });
+  // ========================= rate calculations for display  ==============================
+
+  convertRateToBitcoinPrice(rate){
+      if (isNaN(rate)){
+          return ''
+      }
+      else {
+        return   (1 / rate).toFixed(3)
+      }
+    
   }
-  componentDidMount() {
-    this.calculateRates()
-  };
+
+  calculateTotalInBitcoin(rate){
+     var total = this.convertRateToBitcoinPrice(rate) * this.props.bitcoinAmount 
+     return total.toFixed(2);
+  }
 
   render() {
     return(
-    <table>
+        <table>
           <tbody>
           <tr>
             <th>Currency</th>
-            <th>BTC Unit Price</th>
-            <th>Result</th>
+            <th>Unit Price (BTC)</th>
+            <th>Conversion Result</th>
           </tr>
           <tr>
             <td>Litecoin</td>
-            <td>{ (1 / this.props.litecoin).toFixed(3) }</td>
-            <td>{ this.state.LtcAmount? this.state.LtcAmount : ''}</td>
+            <td>{ this.props.litecoin? this.convertRateToBitcoinPrice(this.props.litecoin) : ''}</td>
+            <td>{ this.props.bitcoinAmount? this.calculateTotalInBitcoin(this.props.litecoin) : ''}</td>
           </tr>
           <tr>
             <td>Ethereum</td>
-            <td>{ (1 / this.props.ethereum).toFixed(3)}</td>
-            <td>{ this.state.EthAmount? this.state.EthAmount : ''}</td>
+            <td>{ this.props.ethereum? this.convertRateToBitcoinPrice(this.props.ethereum) : ''}</td>
+            <td>{ this.props.bitcoinAmount? this.calculateTotalInBitcoin(this.props.ethereum) : ''}</td>
           </tr>
           <tr>
             <td>Dash</td>
-            <td>{ (1 / this.props.dash).toFixed(3)}</td>
-            <td>{ this.state.DashAmount? this.state.DashAmount : ''}</td>
+            <td>{ this.props.dash? this.convertRateToBitcoinPrice(this.props.dash) : ''}</td>
+            <td>{ this.props.bitcoinAmount? this.calculateTotalInBitcoin(this.props.dash)  : ''}</td>
           </tr>
           </tbody>
       </table>

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import HistoryChart from './HistoryChart';
-//import RatesTable from './RatesTable';
+import RatesTable from './RatesTable';
 //import RatesForm from './RatesForm';
 //import Select from 'react-select';
 //import 'react-select/dist/react-select.css';
+
+//loading icon
+//modularize (redux?)
 
 const coincapUrl = 'http://coincap.io/page/';//ETH';
 //price_btc
@@ -19,26 +22,66 @@ class BitcoinData extends Component {
     super(props);
     this.state = {
       bitcoinAmount:'',
-      api: ''
+      api: '',
     };
     this.handleAmountChange = this.handleAmountChange.bind(this);
     this.calculateRates = this.calculateRates.bind(this);
     this.handleApiChange = this.handleApiChange.bind(this);
     this.getLatestRates = this.getLatestRates.bind(this);
   }
-  handleTickerSubmit() {
-    let tickerRow = { 
-      time: Date.now(),
-      LTC: this.state.litecoin,
-      ETH: this.state.ethereum,
-      DASH: this.state.dash,
-      API: this.state.selectedApi
+
+  // ============================ main network calls =================================
+
+  getLatestRates() {
+     switch(this.state.api){
+       case 'coincap':
+          this.getLatestRatesCoinCap();
+          break;
+       case 'poloniex':
+          this.getLatestRatesPoloniex();
+          break;
+       case 'kraken':
+          this.getLatestRatesKraken();
+          break;
+       case 'wex':
+          this.getLatestRatesWex();
+          break;
+     }
+      //save the latest prices to mongo 
+      this.handleTickerSubmit();
+  
+        //refreshes grid to show only data from selected API source
+     this.loadDataFromServer();
+    };
+
+    handleTickerSubmit() {
+      let tickerRow = { 
+        time: Date.now(),
+        LTC: this.state.litecoin,
+        ETH: this.state.ethereum,
+        DASH: this.state.dash,
+        API: this.state.api
+      }
+      axios.post(this.props.url, tickerRow)
+        .catch(err => {
+          console.error(err);
+        });
     }
-    axios.post(this.props.url, tickerRow)
-      .catch(err => {
-        console.error(err);
-      });
-  }
+
+    loadDataFromServer() {
+      axios.get(this.props.url + '?API=' + this.state.api)
+        .then(res=> {
+          console.log(res.data);
+          let data = this.cleanData(res.data);
+          this.setState({ data: data });
+        })
+      
+    }
+
+//================================= end main network =============================
+
+
+  //========================== various API fetches =================================
   getLatestRatesPoloniex(){
     fetch(poloniexUrl)
     .then(d => d.json())
@@ -53,17 +96,7 @@ class BitcoinData extends Component {
     });
   }
 
-  convertRateToBitcoinPrice(rate){
-    return   (1 / rate).toFixed(3)
-  }
-
-  calculateTotalInBitcoin(rate){
-     var total = this.convertRateToBitcoinPrice(rate) * this.state.bitcoinAmount 
-     return total.toFixed(2);
-  }
-
   getLatestRatesCoinCap(){
-
     fetch(coincapUrl + 'ETH')
     .then(d => d.json())
     .then(d => {
@@ -139,35 +172,41 @@ class BitcoinData extends Component {
       })
     });
   }
+   //============================== end various API fetch ===================================
 
-  getLatestRates() {
-  
-   switch(this.state.api){
-     case 'coincap':
-        this.getLatestRatesCoinCap();
-        break;
-     case 'poloniex':
-        this.getLatestRatesPoloniex();
-        break;
-     case 'kraken':
-        this.getLatestRatesKraken();
-        break;
-     case 'wex':
-        this.getLatestRatesWex();
-        break;
-   }
-  };
 
-  
+ 
 
-  componentDidMount() {
+//==================================chart methods ============================
+ 
   
-    //best place to make network requests
-    this.getLatestRates();
-    //save the latest prices to mongo 
-    this.handleTickerSubmit();
-    
-  };
+  cleanData(rawData) {
+    //clean for fields currency, price, time
+    //should probably limit scale
+    let cleanHistoryData = [];
+    rawData.forEach((tickerItem)=> {
+      if (tickerItem.LTC && tickerItem.ETH && tickerItem.DASH && tickerItem.time) {
+        var newCleanedTicker = {
+          LTC: parseFloat(tickerItem.LTC),
+          ETH: parseFloat(tickerItem.ETH),
+          DASH: parseFloat(tickerItem.DASH),
+          time: this.formatTime(parseInt(tickerItem.time))
+        }
+        cleanHistoryData.push(newCleanedTicker);
+      }
+    });
+     return cleanHistoryData;
+  }
+  formatTime(secs) {
+    console.log(secs)
+    var t = new Date(1970, 0, 1); // Epoch
+    t.setSeconds(secs);
+    var datetext = t.toTimeString();
+    return datetext.split(' ')[0];
+  }
+  //=========================================end chart=================================
+
+  //====================================== user form =================================
 
   handleAmountChange(e) {
     if(!isNaN(e.target.value)){
@@ -186,15 +225,7 @@ class BitcoinData extends Component {
     
   }
 
-
-
-  appHandleSubmit(text) {
-    this.setState({bitcoinAmount: text});
-    console.log(this.state.bitcoinAmount)
-  }
   calculateRates() {
-    console.log(this.state.bitcoinAmount)
-    console.log(this.state.api)
     this.getLatestRates();
     this.setState({
       LtcAmount: (1 / this.state.litecoin).toFixed(3),
@@ -202,13 +233,19 @@ class BitcoinData extends Component {
       DashAmount: (1 / this.state.dash).toFixed(3)
     });
   }
+
+  // ==================================== end user form ==================================
+
+
+  
+
+
+ 
   
   render() {
   
     return (
       <div>
-        bitcoin: 
-        
         <input
           type='text'
           placeholder='quantity to convert...'
@@ -225,34 +262,17 @@ class BitcoinData extends Component {
           <button onClick={this.calculateRates}>get conversion rates</button> 
           
         <br/>
-        <table>
-          <tbody>
-          <tr>
-            <th>Currency</th>
-            <th>Unit Price (BTC)</th>
-            <th>Conversion Result</th>
-          </tr>
-          <tr>
-            <td>Litecoin</td>
-            <td>{ this.state.litecoin? this.convertRateToBitcoinPrice(this.state.litecoin) : ''}</td>
-            <td>{ this.state.bitcoinAmount? this.calculateTotalInBitcoin(this.state.litecoin) : ''}</td>
-          </tr>
-          <tr>
-            <td>Ethereum</td>
-            <td>{ this.state.ethereum? this.convertRateToBitcoinPrice(this.state.ethereum) : ''}</td>
-            <td>{ this.state.bitcoinAmount? this.calculateTotalInBitcoin(this.state.ethereum) : ''}</td>
-          </tr>
-          <tr>
-            <td>Dash</td>
-            <td>{ this.state.dash? this.convertRateToBitcoinPrice(this.state.dash) : ''}</td>
-            <td>{ this.state.bitcoinAmount? this.calculateTotalInBitcoin(this.state.dash)  : ''}</td>
-          </tr>
-          </tbody>
-      </table>
+      <RatesTable
+        bitcoinAmount = {this.state.bitcoinAmount}
+        litecoin = {this.state.litecoin}
+        ethereum = {this.state.ethereum}
+        dash = {this.state.dash}
+      />
        
         <br/> 
             <HistoryChart
                 url='http://localhost:3001/api/ticker'
+                data = {this.state.data}
             />
       </div>
      

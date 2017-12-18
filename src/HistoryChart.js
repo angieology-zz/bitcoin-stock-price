@@ -10,48 +10,42 @@ class HistoryChart extends Component {
       
     };
   }
-  loadDataFromServer() {
-    axios.get(this.props.url)
-      .then(res=> {
-        let data = this.cleanData(res.data);
-        this.setState({ data: data });
-        console.log(this.state.data);
-      })
-  }
+  // loadDataFromServer() {
+  //   axios.get(`${this.props.url}/${this.props.api}`)
+  //     .then(res=> {
+  //       let data = this.cleanData(res.data);
+  //       this.setState({ data: data });
+  //       console.log(this.state.data);
+  //     })
+  // }
   
-  cleanData(rawData) {
-    //clean for fields currency, price, time
-    //should probably limit scale
-    let cleanHistoryData = [];
-    rawData.forEach((tickerItem)=> {
-      if (tickerItem.LTC && tickerItem.ETH && tickerItem.DASH && tickerItem.time) {
-        var newCleanedTicker = {
-          LTC: parseFloat(tickerItem.LTC),
-          ETH: parseFloat(tickerItem.ETH),
-          DASH: parseFloat(tickerItem.DASH),
-          time: this.formatTime(parseInt(tickerItem.time))
-        }
-        cleanHistoryData.push(newCleanedTicker);
-      }
-    });
-     return cleanHistoryData;
-  }
-  componentDidMount() {
-    this.loadDataFromServer()
-  };
-  formatTime(secs) {
-    console.log(secs)
-    var t = new Date(1970, 0, 1); // Epoch
-    t.setSeconds(secs);
-    var datetext = t.toTimeString();
-    return datetext.split(' ')[0];
-  }
+  // cleanData(rawData) {
+  //   //clean for fields currency, price, time
+  //   //should probably limit scale
+  //   let cleanHistoryData = [];
+  //   rawData.forEach((tickerItem)=> {
+  //     if (tickerItem.LTC && tickerItem.ETH && tickerItem.DASH && tickerItem.time) {
+  //       var newCleanedTicker = {
+  //         LTC: parseFloat(tickerItem.LTC),
+  //         ETH: parseFloat(tickerItem.ETH),
+  //         DASH: parseFloat(tickerItem.DASH),
+  //         time: this.formatTime(parseInt(tickerItem.time))
+  //       }
+  //       cleanHistoryData.push(newCleanedTicker);
+  //     }
+  //   });
+  //    return cleanHistoryData;
+  // }
+  // componentDidMount() {
+  //   this.loadDataFromServer()
+  // };
+
 
   render() {
-    if (!this.state.data) { return <p> "Loading..." </p>}
+    if (!this.props.data) { return <div></div>}
   
     return (
-      <LineChart width={600} height={300} data={this.state.data}
+      <LineChart width={600} height={300} data={this.props.data}
             margin={{top: 5, right: 30, left: 20, bottom: 5}}>
        <XAxis 
           dataKey="time" 

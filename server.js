@@ -47,7 +47,7 @@ router.route('/ticker')
   //retrieve all ticker from the database
   .get(function(req, res) {
     //looks at our Ticker Schema
-    Ticker.find(function(err, tickers) {
+    Ticker.find(req.query, function(err, tickers) {
       if (err)
         res.send(err);
       //responds with a json object of our database ticker.
@@ -69,6 +69,19 @@ router.route('/ticker')
       }); 
   });
 
+  //Adding a route to a specific comment based on the database ID
+router.route('/tickers/:API')
+//The put method gives us the chance to update our comment based on the ID passed to the route
+  .get(function(req, res) {
+    Ticker.find(req.query, function(err, ticker) {
+      if (err)
+        res.send(err);
+     else 
+          res.send(ticker);
+       
+    });
+    
+  })
 
 
 //Use our router configuration when we call /api
