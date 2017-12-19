@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { PageHeader, Form, Button } from 'react-bootstrap'
+import {
+  PageHeader, Form, Button,
+  FormControl,
+  ControlLabel,
+  FormGroup,
+  Col
+} from 'react-bootstrap'
 import HistoryChart from './HistoryChart';
 import RatesTable from './RatesTable';
 
@@ -16,7 +22,7 @@ class BitcoinApp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bitcoinAmount:'',
+      bitcoinAmount: '',
       api: '',
     };
     this.handleAmountChange = this.handleAmountChange.bind(this);
@@ -27,158 +33,158 @@ class BitcoinApp extends Component {
   // ============================ main network calls =================================
 
   getLatestRates() {
-     switch(this.state.api){
-       case 'coincap':
-          this.getLatestRatesCoinCap();
-          break;
-       case 'poloniex':
-          this.getLatestRatesPoloniex();
-          break;
-       case 'kraken':
-          this.getLatestRatesKraken();
-          break;
-       case 'wex':
-          this.getLatestRatesWex();
-          break;
-     }
-      //save the latest prices to mongo 
-      this.handleTickerSubmit();
-  
-        //refreshes grid to show only data from selected API source
-     this.loadDataFromServer();
-    };
-
-    handleTickerSubmit() {
-      let tickerRow = { 
-        time: Date.now(),
-        LTC: this.state.litecoin,
-        ETH: this.state.ethereum,
-        DASH: this.state.dash,
-        API: this.state.api
-      }
-      axios.post(this.props.url, tickerRow)
-        .catch(err => {
-          console.error(err);
-        });
+    switch (this.state.api) {
+      case 'coincap':
+        this.getLatestRatesCoinCap();
+        break;
+      case 'poloniex':
+        this.getLatestRatesPoloniex();
+        break;
+      case 'kraken':
+        this.getLatestRatesKraken();
+        break;
+      case 'wex':
+        this.getLatestRatesWex();
+        break;
     }
+    //save the latest prices to mongo 
+    this.handleTickerSubmit();
 
-    loadDataFromServer() {
-      axios.get(this.props.url + '?API=' + this.state.api)
-        .then(res=> {
-          console.log(res.data);
-          let data = this.cleanData(res.data);
-          this.setState({ data: data });
-        })
-      
+    //refreshes grid to show only data from selected API source
+    this.loadDataFromServer();
+  };
+
+  handleTickerSubmit() {
+    let tickerRow = {
+      time: Date.now(),
+      LTC: this.state.litecoin,
+      ETH: this.state.ethereum,
+      DASH: this.state.dash,
+      API: this.state.api
     }
+    axios.post(this.props.url, tickerRow)
+      .catch(err => {
+        console.error(err);
+      });
+  }
 
-//================================= end main network =============================
+  loadDataFromServer() {
+    axios.get(this.props.url + '?API=' + this.state.api)
+      .then(res => {
+        console.log(res.data);
+        let data = this.cleanData(res.data);
+        this.setState({ data: data });
+      })
+
+  }
+
+  //================================= end main network =============================
 
 
   //========================== various API fetches =================================
-  getLatestRatesPoloniex(){
+  getLatestRatesPoloniex() {
     fetch(poloniexUrl)
-    .then(d => d.json())
-    .then(d => {
-      //ethereum, litecoin, dash
-      //save in database with timestamp and type of coin?
-      this.setState({
-        litecoin: d.BTC_LTC.last,
-        ethereum: d.BTC_ETH.last,
-        dash: d.BTC_DASH.last
+      .then(d => d.json())
+      .then(d => {
+        //ethereum, litecoin, dash
+        //save in database with timestamp and type of coin?
+        this.setState({
+          litecoin: d.BTC_LTC.last,
+          ethereum: d.BTC_ETH.last,
+          dash: d.BTC_DASH.last
+        });
       });
-    });
   }
 
-  getLatestRatesCoinCap(){
+  getLatestRatesCoinCap() {
     fetch(coincapUrl + 'ETH')
-    .then(d => d.json())
-    .then(d => {
-      this.setState({
-        ethereum: d.price_btc
-      })
-    });
+      .then(d => d.json())
+      .then(d => {
+        this.setState({
+          ethereum: d.price_btc
+        })
+      });
     fetch(coincapUrl + 'LTC')
-    .then(d => d.json())
-    .then(d => {
-      this.setState({
-        litecoin: d.price_btc
-      })
-    });
+      .then(d => d.json())
+      .then(d => {
+        this.setState({
+          litecoin: d.price_btc
+        })
+      });
     fetch(coincapUrl + 'DASH')
-    .then(d => d.json())
-    .then(d => {
-      this.setState({
-        dash: d.price_btc
-      })
-    });
+      .then(d => d.json())
+      .then(d => {
+        this.setState({
+          dash: d.price_btc
+        })
+      });
   };
-  getLatestRatesKraken(){
+  getLatestRatesKraken() {
     //if allow-access-control-origin errors prevent fetch, add chrome extention 
     //https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en-US
     fetch(krakenUrl + 'ETHXBT')
-    .then(d => d.json())
-    .then(d => {
-      var price = d.result.XETHXXBT[d.result.XETHXXBT.length -1 ][0]
-      this.setState({
-        ethereum: price
-      })
-    });
+      .then(d => d.json())
+      .then(d => {
+        var price = d.result.XETHXXBT[d.result.XETHXXBT.length - 1][0]
+        this.setState({
+          ethereum: price
+        })
+      });
     fetch(krakenUrl + 'LTCXBT')
-    .then(d => d.json())
-    .then(d => {
-      var price = d.result.XLTCXXBT[d.result.XLTCXXBT.length -1 ][0]
-      this.setState({
-        litecoin: price
-      })
-    });
+      .then(d => d.json())
+      .then(d => {
+        var price = d.result.XLTCXXBT[d.result.XLTCXXBT.length - 1][0]
+        this.setState({
+          litecoin: price
+        })
+      });
     fetch(krakenUrl + 'DASHXBT')
-    .then(d => d.json())
-    .then(d => {
-      var price = d.result.DASHXBT[d.result.DASHXBT.length -1 ][0]
-      this.setState({
-        dash: price
-      })
-    });
-   
+      .then(d => d.json())
+      .then(d => {
+        var price = d.result.DASHXBT[d.result.DASHXBT.length - 1][0]
+        this.setState({
+          dash: price
+        })
+      });
+
   }
-  getLatestRatesWex(){
+  getLatestRatesWex() {
 
     fetch(wexUrl + 'eth_btc')
-    .then(d => d.json())
-    .then(d => {
-      this.setState({
-        ethereum: d.eth_btc.last
-      })
-    });
+      .then(d => d.json())
+      .then(d => {
+        this.setState({
+          ethereum: d.eth_btc.last
+        })
+      });
     fetch(wexUrl + 'ltc_btc')
-    .then(d => d.json())
-    .then(d => {
-      this.setState({
-        litecoin: d.ltc_btc.last
-      })
-    });
+      .then(d => d.json())
+      .then(d => {
+        this.setState({
+          litecoin: d.ltc_btc.last
+        })
+      });
     fetch(wexUrl + 'dsh_btc')
-    .then(d => d.json())
-    .then(d => {
-      this.setState({
-        dash: d.dsh_btc.last
-      })
-    });
+      .then(d => d.json())
+      .then(d => {
+        this.setState({
+          dash: d.dsh_btc.last
+        })
+      });
   }
-   //============================== end various API fetch ===================================
+  //============================== end various API fetch ===================================
 
 
- 
 
-//==================================chart methods ============================
- 
-  
+
+  //==================================chart methods ============================
+
+
   cleanData(rawData) {
     //clean for fields currency, price, time
     //should probably limit scale
     let cleanHistoryData = [];
-    rawData.forEach((tickerItem)=> {
+    rawData.forEach((tickerItem) => {
       if (tickerItem.LTC && tickerItem.ETH && tickerItem.DASH && tickerItem.time) {
         var newCleanedTicker = {
           LTC: parseFloat(tickerItem.LTC),
@@ -189,7 +195,7 @@ class BitcoinApp extends Component {
         cleanHistoryData.push(newCleanedTicker);
       }
     });
-     return cleanHistoryData;
+    return cleanHistoryData;
   }
   formatTime(secs) {
     var t = new Date(1970, 0, 1); // Epoch---todo fix
@@ -202,20 +208,22 @@ class BitcoinApp extends Component {
   //====================================== user form =================================
 
   handleAmountChange(e) {
-    if(!isNaN(e.target.value)){
-      var newVal = e.target.value
-      this.setState((state, props)=>{ 
-        return {bitcoinAmount: newVal }});
-    } else {
-      alert("Please enter a numerical value")
-    }
+    //if(!isNaN(e.target.value)){
+    var newVal = e.target.value
+    this.setState((state, props) => {
+      return { bitcoinAmount: newVal }
+    });
+    //} else {
+    //alert("Please enter a numerical value")
+    //}
   }
 
   handleApiChange(e) {
-      var newVal = e.target.value
-      this.setState((state, props)=>{ 
-        return {api: newVal }});
-    
+    var newVal = e.target.value
+    this.setState((state, props) => {
+      return { api: newVal }
+    });
+
   }
 
   calculateRates() {
@@ -229,44 +237,76 @@ class BitcoinApp extends Component {
 
   // ==================================== end user form ==================================
 
-
+  getValidationState() {
+    const amt = this.state.bitcoinAmount;
+    if (isNaN(amt)) return 'error';
+    //else return 'success';
+    return null;
+  }
 
   render() {
-  
+
     return (
       <div>
-        <PageHeader>Bitcoin Exchange Rates</PageHeader>
-        <div>
-            <input
-              type='text'
-              placeholder='quantity to convert...'
-              value={ this.state.bitcoinAmount }
-              onChange={ this.handleAmountChange } />
+        <PageHeader>Bitcoin Exchange Rates <small> Litecoin, Ethereum, and Dash</small></PageHeader>
+        <Form horizontal>
 
-          <select onChange={ this.handleApiChange} value={this.state.api}>
-              <option value="" disabled="disabled" selected="selected">Please select an api</option>
-              <option value="coincap">CoinCap</option>
-              <option value="poloniex">Poloniex</option>
-              <option value="kraken">Kraken</option>
-              <option value="wex">Wex (BTC-E)</option>
-          </select>
-              <Button onClick={this.calculateRates}>get conversion rates</Button> 
-              
-       </div>
-      <RatesTable
-        bitcoinAmount = {this.state.bitcoinAmount}
-        litecoin = {this.state.litecoin}
-        ethereum = {this.state.ethereum}
-        dash = {this.state.dash}
-      />
-       
-        <br/> 
-            <HistoryChart
-                url='http://localhost:3001/api/ticker'
-                data = {this.state.data}
-            />
+          <FormGroup
+            controlId="formBasicText"
+            validationState={this.getValidationState()}
+          >
+            <Col componentClass={ControlLabel} sm={2}>
+              Amount
+          </Col>
+            <Col sm={6}>
+              <FormControl
+                type="text"
+                value={this.state.bitcoinAmount}
+                placeholder="quantity to convert..."
+                onChange={this.handleAmountChange}
+              />
+            </Col>
+          </FormGroup>
+
+
+
+          <FormGroup controlId="formControlsSelect">
+            <Col componentClass={ControlLabel} sm={2}>
+              Api Source
+            </Col>
+            <Col sm={6}>
+              <FormControl componentClass="select" placeholder="select" onChange={this.handleApiChange} value={this.state.api}>
+                <option value="" disabled="disabled" selected="selected">Please select an api</option>
+                <option value="coincap">CoinCap</option>
+                <option value="poloniex">Poloniex</option>
+                <option value="kraken">Kraken</option>
+                <option value="wex">Wex (BTC-E)</option>
+              </FormControl>
+            </Col>
+          </FormGroup>
+
+          <FormGroup>
+            <Col smOffset={2} sm={10}>
+              <Button onClick={this.calculateRates} >
+                get conversion rates
+            </Button>
+            </Col>
+          </FormGroup>
+
+        </Form>
+        <RatesTable
+          bitcoinAmount={this.state.bitcoinAmount}
+          litecoin={this.state.litecoin}
+          ethereum={this.state.ethereum}
+          dash={this.state.dash}
+        />
+
+        <HistoryChart
+          url='http://localhost:3001/api/ticker'
+          data={this.state.data}
+        />
       </div>
-     
+
     )
   }
 }
