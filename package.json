@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "axios": "^0.14.0",
+    "blockchain.info": "^2.11.0",
+    "blockcypher": "^0.2.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
@@ -17,6 +19,8 @@
     "react": "^15.6.2",
     "react-bootstrap": "^0.31.5",
     "react-dom": "^15.6.2",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "react-select": "^1.1.0",
     "recharts": "^1.0.0-beta.6"
   },

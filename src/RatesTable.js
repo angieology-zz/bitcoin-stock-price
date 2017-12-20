@@ -22,6 +22,9 @@ class RatesTable extends Component {
     }
 
     calculateTotalInBitcoin(rate) {
+        if (isNaN(rate)) {
+            return ''
+        }
         var total = this.convertRateToBitcoinPrice(rate) * this.props.bitcoinAmount
         return total.toFixed(2);
     }
