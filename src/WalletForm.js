@@ -18,7 +18,7 @@ import {
 import WalletList from './WalletList';
 
 
-const mytoken = '9d7dd5653342454ab82f60419b8a73c1';
+const mytoken = process.env.BLOCKCY_TOKEN;
 class WalletForm extends Component {
     constructor(props) {
         super(props);

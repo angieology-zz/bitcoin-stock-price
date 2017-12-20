@@ -11,7 +11,6 @@ import {
 } from 'react-bootstrap'
 import AddressList from './AddressList';
 
-const mytoken = '9d7dd5653342454ab82f60419b8a73c1';
 class WalletList extends Component {
     constructor(props) {
         super(props);
