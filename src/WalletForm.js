@@ -34,7 +34,6 @@ class WalletForm extends Component {
 
     componentDidMount() {
         this.loadWalletNames();
-        console.log(this.state.walletNames)
     }
     handleNameChange(e) {
         var newName = e.target.value
@@ -65,28 +64,6 @@ class WalletForm extends Component {
 
     }
 
-    deleteWallet(name) {
-        axios.delete("https://api.blockcypher.com/v1/btc/main/wallets/" + name + "?token=" + mytoken)
-            .then(d => {
-                console.log(d);
-                let walletsCopy = this.state.wallets
-                delete walletsCopy[name]
-                this.setState({ wallets: walletsCopy });
-            })
-    }
-
-    addAddress(name) {
-        axios.post('https://api.blockcypher.com/v1/btc/main/wallets/' + name + '/addresses/generate?token=' + mytoken)
-            .then((d) => {
-                console.log(d)
-                let walletsCopy = this.state.wallets
-                //got address for name in the wallet
-                walletsCopy[name] = d.data.addresses;
-                this.setState({ wallets: walletsCopy })
-            });
-        //add address to this wallet only
-    }
-
     createWallet() {
         if (!this.state.name || this.state.name == '') {
             alert("name required");
@@ -109,6 +86,27 @@ class WalletForm extends Component {
                 })
         }
 
+    }
+
+    deleteWallet(name) {
+        axios.delete("https://api.blockcypher.com/v1/btc/main/wallets/" + name + "?token=" + mytoken)
+            .then(d => {
+                console.log(d);
+                let walletsCopy = this.state.wallets
+                delete walletsCopy[name]
+                this.setState({ wallets: walletsCopy });
+            })
+    }
+
+    addAddress(name) {
+        axios.post('https://api.blockcypher.com/v1/btc/main/wallets/' + name + '/addresses/generate?token=' + mytoken)
+            .then((d) => {
+                console.log(d)
+                let walletsCopy = this.state.wallets
+                //got address for name in the wallet
+                walletsCopy[name] = d.data.addresses;
+                this.setState({ wallets: walletsCopy })
+            });
     }
 
     getValidationState() {
