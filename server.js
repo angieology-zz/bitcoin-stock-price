@@ -5,7 +5,6 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-//var Comment = require('./model/comments');
 var Ticker = require('./model/tickers');
 
 //and create our instances
