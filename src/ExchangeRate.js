@@ -306,7 +306,6 @@ class ExchangeRate extends Component {
           </Col>
           <Col sm={10}>
             <HistoryChart
-              url='http://localhost:3001/api/ticker'
               data={this.state.data}
             />
           </Col>
