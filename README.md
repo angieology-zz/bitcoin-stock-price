@@ -3,7 +3,7 @@
 ## Overview:
 
 Simple MERN app calls Poloniex, Kraken, Wex, Coincap API for latest price of Ethereum, Litecoin, and DASH prices.
-Saves real data from API to mongoDB using mongoose. Builds history chart by querying for data from selected api
+Saves real data from API to mongoDB using mongoose. Builds history chart by querying for data from selected api. Creates wallets and generates addresses for sending/receiving funds
 
 ## Exchange Rate App:
 
