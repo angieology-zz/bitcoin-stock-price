@@ -5,6 +5,18 @@
 Simple MERN app calls Poloniex, Kraken, Wex, Coincap API for latest price of Ethereum, Litecoin, and DASH prices.
 Saves real data from API to mongoDB using mongoose. Builds history chart by querying for data from selected api. Creates wallets and generates addresses for sending/receiving funds
 
+## Installation:
+1. Clone the github 
+2. In the project directory, run `npm install` to install dependencies
+3. Setup an mLab account with a collection called 'bitcoin', add yourself as a user, define user and password, and replace the    url variables in server.js (shown below)
+4. Register for a free token from BlockCypher and add your token to the variable in WalletForm.js
+5. in the terminal:
+  `npm run start-dev`
+  will start the React app and API
+6. Install Allow-Control-Allow-Origin * extention in Chrome to access some of the real-time APIs     
+   https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en
+7. go to localhost:3001 in the browser to view the app
+
 ## Exchange Rate App:
 
 For styling I used react bootstrap. My mongo database is hosted on mLab. I found it really easy to find a tutorial and set up my mLab for the first time. My mLab database credentials and blockcyper api token is hidden in this public respository and saved as a process variable. On a mac you can do something like this from terminal of your project folder:
