@@ -1,11 +1,11 @@
-# Bitcoin exchange rates
+# Bitcoin Exchange Rate and Wallet App
 
 ## Overview:
 
 Simple MERN app calls Poloniex, Kraken, Wex, Coincap API for latest price of Ethereum, Litecoin, and DASH prices.
 Saves real data from API to mongoDB using mongoose. Builds history chart by querying for data from selected api. Creates wallets and generates addresses for sending/receiving funds
 
-## Installation:
+## Setting Up:
 1. Clone the github 
 2. In the project directory, run `npm install` to install dependencies
 3. Setup an mLab account with a collection called 'bitcoin', add yourself as a user, define user and password, and replace the    url variables in server.js (shown below)
