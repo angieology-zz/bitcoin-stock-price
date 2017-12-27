@@ -66,7 +66,10 @@ class ExchangeRate extends Component {
     axios.post(url, tickerRow)
       .catch(err => {
         console.error(err);
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
   }
 
   loadDataFromServer() {
@@ -76,6 +79,9 @@ class ExchangeRate extends Component {
         let data = this.cleanData(res.data);
         this.setState({ data: data });
       })
+      .catch(error => {
+        console.log(error.response)
+    });
 
   }
 
@@ -94,7 +100,10 @@ class ExchangeRate extends Component {
           ethereum: d.BTC_ETH.last,
           dash: d.BTC_DASH.last
         });
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
   }
 
   getLatestRatesCoinCap() {
@@ -104,21 +113,30 @@ class ExchangeRate extends Component {
         this.setState({
           ethereum: d.price_btc
         })
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
     fetch(coincapUrl + 'LTC')
       .then(d => d.json())
       .then(d => {
         this.setState({
           litecoin: d.price_btc
         })
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
     fetch(coincapUrl + 'DASH')
       .then(d => d.json())
       .then(d => {
         this.setState({
           dash: d.price_btc
         })
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
   };
   getLatestRatesKraken() {
     //if allow-access-control-origin errors prevent fetch, add chrome extention 
@@ -130,7 +148,10 @@ class ExchangeRate extends Component {
         this.setState({
           ethereum: price
         })
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
     fetch(krakenUrl + 'LTCXBT')
       .then(d => d.json())
       .then(d => {
@@ -138,7 +159,10 @@ class ExchangeRate extends Component {
         this.setState({
           litecoin: price
         })
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
     fetch(krakenUrl + 'DASHXBT')
       .then(d => d.json())
       .then(d => {
@@ -146,7 +170,10 @@ class ExchangeRate extends Component {
         this.setState({
           dash: price
         })
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
 
   }
   getLatestRatesWex() {
@@ -157,21 +184,30 @@ class ExchangeRate extends Component {
         this.setState({
           ethereum: d.eth_btc.last
         })
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
     fetch(wexUrl + 'ltc_btc')
       .then(d => d.json())
       .then(d => {
         this.setState({
           litecoin: d.ltc_btc.last
         })
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
     fetch(wexUrl + 'dsh_btc')
       .then(d => d.json())
       .then(d => {
         this.setState({
           dash: d.dsh_btc.last
         })
-      });
+      })
+      .catch(error => {
+        console.log(error.response)
+    });
   }
   //============================== end various API fetch ===================================
 

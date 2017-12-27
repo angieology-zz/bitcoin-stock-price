@@ -47,6 +47,9 @@ class WalletForm extends Component {
             .then((d) => {
                 console.log(d.data.wallet_names)
                 this.loadWalletAddresses(d.data.wallet_names);
+            })
+            .catch(error => {
+                console.log(error.response)
             });
     }
 
@@ -59,6 +62,9 @@ class WalletForm extends Component {
                     //got address for name in the wallet
                     walletsCopy[name] = d.data.addresses;
                     this.setState({ wallets: walletsCopy })
+                })
+                .catch(error => {
+                    console.log(error.response)
                 });
         }))
 
@@ -84,6 +90,9 @@ class WalletForm extends Component {
                         })
                     }
                 })
+                .catch(error => {
+                    console.log(error.response)
+                });
         }
 
     }
@@ -96,6 +105,9 @@ class WalletForm extends Component {
                 delete walletsCopy[name]
                 this.setState({ wallets: walletsCopy });
             })
+            .catch(error => {
+                console.log(error.response)
+            });
     }
 
     addAddress(name) {
@@ -106,6 +118,9 @@ class WalletForm extends Component {
                 //got address for name in the wallet
                 walletsCopy[name] = d.data.addresses;
                 this.setState({ wallets: walletsCopy })
+            })
+            .catch(error => {
+                console.log(error.response)
             });
     }
 
